@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Escape - 인터넷 중독 탈출기</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div id="game-wrap">
+
+  <!-- ===================== 인트로 스토리 화면 ===================== -->
+  <div id="intro-screen" class="screen">
+    <div class="phone-suck-anim" id="phone-anim">
+      <div class="glow-phone" id="phone-icon">📱</div>
+      <div class="player-icon" id="intro-runner">🏃</div>
+    </div>
+    <div id="dialogue-box">
+      <p id="dialogue-text"></p>
+      <div id="dialogue-next-hint">▶ 클릭해서 계속</div>
+    </div>
+    <div class="title-logo" id="title-logo">
+      <h1>ESCAPE</h1>
+      <p class="subtitle">인터넷 중독에서 벗어나 시험 100점 맞기!</p>
+    </div>
+  </div>
+
+  <div id="transition-flash"></div>
+
+  <!-- ===================== 게임 화면 ===================== -->
+  <div id="game-screen" class="screen hidden">
+
+    <div id="hud">
+      <div id="hud-left">
+        <div id="lives">❤️❤️❤️</div>
+        <div id="phase-label">🌐 디지털 세상</div>
+      </div>
+      <div id="hud-center">
+        <div id="progress-bar-outer">
+          <div id="progress-bar-inner"></div>
+          <div id="progress-text">0 / 100000</div>
+        </div>
+      </div>
+      <div id="hud-right">
+        <div id="score">SCORE: 0</div>
+      </div>
+    </div>
+
+    <div id="status-banner"></div>
+
+    <canvas id="game-canvas" width="900" height="450"></canvas>
+
+    <div id="touch-controls">
+      <button id="btn-left" class="touch-btn">◀ 좌</button>
+      <button id="btn-slide" class="touch-btn">⬇ 슬라이드</button>
+      <button id="btn-jump" class="touch-btn">⬆ 점프</button>
+      <button id="btn-right" class="touch-btn">우 ▶</button>
+    </div>
+
+    <div class="instructions">←/→ : 레인 이동 · 스페이스/↑ : 점프 · ↓ : 슬라이드</div>
+  </div>
+
+  <!-- ===================== 게임 오버 화면 ===================== -->
+  <div id="gameover-screen" class="screen hidden">
+    <h1 class="go-title">😵 스좀비에게 잡혔다...</h1>
+    <p id="gameover-score">최종 점수: 0</p>
+    <p class="go-sub">다시 도전해서 인터넷 중독에서 벗어나자!</p>
+    <button id="retry-btn">다시 시작</button>
+  </div>
+
+  <!-- ===================== 승리 화면 ===================== -->
+  <div id="win-screen" class="screen hidden">
+    <h1 class="win-title">🎉 시험 100점 달성! 🎉</h1>
+    <p class="win-sub">인터넷 중독에서 완전히 벗어났다!<br/>현실 세계로 무사히 탈출 성공!</p>
+    <button id="win-retry-btn">한 번 더 플레이</button>
+  </div>
+
+</div>
+
+<script src="game.js"></script>
+</body>
+</html>
