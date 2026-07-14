@@ -1,0 +1,306 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Noto+Sans+KR:wght@400;700;900&display=swap');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  height: 100%;
+  background: #05010f;
+  font-family: 'Noto Sans KR', sans-serif;
+  overflow: hidden;
+  touch-action: manipulation;
+}
+
+#game-wrap {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.screen {
+  width: 100%;
+  max-width: 920px;
+  height: 100%;
+  max-height: 640px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  color: #fff;
+}
+
+.hidden { display: none !important; }
+
+/* ===================== 인트로 화면 ===================== */
+#intro-screen {
+  background: radial-gradient(ellipse at center, #1a0b3d 0%, #05010f 80%);
+  border-radius: 12px;
+  gap: 24px;
+  padding: 20px;
+}
+
+.title-logo { text-align: center; order: 3; }
+.title-logo h1 {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 42px;
+  letter-spacing: 4px;
+  background: linear-gradient(90deg, #00f5ff, #ff00e5, #fff500);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 30px rgba(0,245,255,0.4);
+}
+.subtitle {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #cfc9ff;
+  letter-spacing: 1px;
+}
+
+.phone-suck-anim {
+  order: 1;
+  position: relative;
+  width: 180px;
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+.glow-phone {
+  font-size: 70px;
+  filter: drop-shadow(0 0 25px #00f5ff) drop-shadow(0 0 45px #ff00e5);
+  animation: pulsePhone 1.4s ease-in-out infinite;
+  position: relative;
+  z-index: 3;
+}
+.player-icon {
+  position: absolute;
+  font-size: 34px;
+  left: -120px;
+  bottom: 6px;
+  z-index: 2;
+  animation: runIdle 0.5s steps(2) infinite;
+}
+@keyframes pulsePhone {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.12); }
+}
+@keyframes runIdle {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+  100% { transform: translateY(0); }
+}
+
+/* 대사가 끝난 후 재생되는 1회성 트랜지션: 폰이 커지고 캐릭터가 그 안으로 빨려들어감 */
+.glow-phone.grow {
+  animation: phoneGrow 1.6s cubic-bezier(0.55, 0, 0.85, 0.35) forwards;
+}
+@keyframes phoneGrow {
+  0%   { transform: scale(1); }
+  100% { transform: scale(38); filter: drop-shadow(0 0 0 #00f5ff); }
+}
+.player-icon.enter-phone {
+  animation: runnerEnter 1.15s ease-in forwards;
+}
+@keyframes runnerEnter {
+  0%   { left: -120px; bottom: 6px; transform: scale(1) rotate(0deg); opacity: 1; }
+  75%  { left: 60px; bottom: 6px; transform: scale(1.1) rotate(0deg); opacity: 1; }
+  100% { left: 78px; bottom: 6px; transform: scale(0.1) rotate(340deg); opacity: 0; }
+}
+.title-logo.fading, #dialogue-box.fading {
+  transition: opacity 0.5s ease;
+  opacity: 0;
+  pointer-events: none;
+}
+
+#transition-flash {
+  position: absolute;
+  inset: 0;
+  background: #f4faff;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 50;
+  transition: opacity 0.45s ease;
+}
+#transition-flash.active {
+  opacity: 1;
+}
+
+#dialogue-box {
+  order: 2;
+  background: rgba(10, 6, 30, 0.9);
+  border: 2px solid #00f5ff;
+  border-radius: 10px;
+  padding: 18px 22px;
+  min-height: 80px;
+  width: 90%;
+  max-width: 560px;
+  box-shadow: 0 0 20px rgba(0,245,255,0.25);
+  cursor: pointer;
+  position: relative;
+}
+#dialogue-text {
+  font-size: 15px;
+  line-height: 1.7;
+  min-height: 48px;
+  white-space: pre-wrap;
+}
+#dialogue-next-hint {
+  position: absolute;
+  bottom: 6px;
+  right: 14px;
+  font-size: 10px;
+  color: #8ee9ff;
+  animation: blink 1.2s infinite;
+}
+@keyframes blink { 0%,100%{opacity:0.3;} 50%{opacity:1;} }
+
+#retry-btn, #win-retry-btn {
+  order: 4;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 900;
+  font-size: 18px;
+  padding: 14px 38px;
+  border-radius: 30px;
+  border: none;
+  background: linear-gradient(90deg, #00f5ff, #7d5fff);
+  color: #0a0518;
+  cursor: pointer;
+  box-shadow: 0 0 20px rgba(125,95,255,0.6);
+  transition: transform 0.15s ease;
+}
+#retry-btn:hover, #win-retry-btn:hover { transform: scale(1.06); }
+
+/* ===================== 게임 화면 ===================== */
+#game-screen {
+  justify-content: flex-start;
+  padding-top: 6px;
+  gap: 6px;
+}
+
+#hud {
+  width: 900px;
+  max-width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 10px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 11px;
+}
+#hud-left { display: flex; flex-direction: column; gap: 4px; }
+#lives { font-size: 16px; }
+#phase-label {
+  font-size: 10px;
+  color: #8ee9ff;
+  background: rgba(0,245,255,0.08);
+  border: 1px solid rgba(0,245,255,0.3);
+  border-radius: 6px;
+  padding: 3px 6px;
+  transition: all 0.4s ease;
+}
+#phase-label.real {
+  color: #ffd08a;
+  background: rgba(255,180,90,0.1);
+  border-color: rgba(255,180,90,0.4);
+}
+
+#hud-center { flex: 1; display: flex; justify-content: center; }
+#progress-bar-outer {
+  width: 320px;
+  max-width: 60vw;
+  height: 16px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+}
+#progress-bar-inner {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #00f5ff, #ffe14d);
+  transition: width 0.25s ease;
+}
+#progress-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+  color: #fff;
+  text-shadow: 0 0 3px #000;
+}
+#hud-right { color: #ffe14d; }
+
+#status-banner {
+  min-height: 22px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #ff6ec7;
+  text-shadow: 0 0 8px rgba(255,110,199,0.8);
+  text-align: center;
+}
+
+#game-canvas {
+  background: #10052b;
+  border: 3px solid #3a2a6d;
+  border-radius: 10px;
+  width: 900px;
+  max-width: 96vw;
+  height: auto;
+  box-shadow: 0 0 40px rgba(0,0,0,0.6);
+  touch-action: none;
+}
+
+.instructions {
+  font-size: 12px;
+  color: #9d95c9;
+  margin-top: 2px;
+}
+
+#touch-controls {
+  display: none;
+  gap: 8px;
+  margin-top: 8px;
+}
+.touch-btn {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: none;
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.4);
+}
+@media (pointer: coarse) {
+  #touch-controls { display: flex; }
+  .instructions { display: none; }
+}
+
+/* ===================== 게임 오버 / 승리 화면 ===================== */
+#gameover-screen, #win-screen {
+  gap: 16px;
+  text-align: center;
+  background: radial-gradient(ellipse at center, #2a0b1d 0%, #05010f 75%);
+  border-radius: 12px;
+}
+.go-title { font-size: 26px; }
+.go-sub { color: #cfc9ff; font-size: 13px; }
+#gameover-score { font-size: 18px; color: #ffe14d; font-weight: 700; }
+
+#win-screen { background: radial-gradient(ellipse at center, #123320 0%, #05010f 75%); }
+.win-title { font-size: 26px; color: #ffe14d; text-shadow: 0 0 20px rgba(255,225,77,0.6); }
+.win-sub { color: #d8ffe0; font-size: 14px; line-height: 1.6; }
